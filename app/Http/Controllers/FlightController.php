@@ -134,7 +134,6 @@ class FlightController extends Controller
 
         //
         //$file = $request->file('file')->store('public/
-
         //$car = Storage::disk('s3')->put('AAAAAAAAAAexample.txt', 'Contents');
 
 
