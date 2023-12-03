@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:send-emails')->everyTwoMinutes();
         //$schedule->command('app:send-emails')->everyThirtyMinutes();
+        //->dailyAt('13:00');	Run the task every day at 13:00
+        //->weeklyOn(1, '8:00');	Run the task every week on Monday at 8:00
     }
 
     /**

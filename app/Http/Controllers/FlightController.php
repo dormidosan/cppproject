@@ -22,231 +22,6 @@ use Aws\Lambda\LambdaClient;
 class FlightController extends Controller
 {
     use MailHelper;
-    public function searchinfilexml_remove(Request $request)
-    {
-
-        $sqlFilePath = base_path('flightdetails10.xml');
-        $xml = simplexml_load_file($sqlFilePath);
-        //$flightDetails = $xml->xpath('//FlightDetails');
-
-        $flsResponseFields = [
-            'FLSOriginCode' => (string)$xml->FLSResponseFields['FLSOriginCode'],
-            'FLSOriginName' => (string)$xml->FLSResponseFields['FLSOriginName'],
-            'FLSDestinationCode' => (string)$xml->FLSResponseFields['FLSDestinationCode'],
-            'FLSDestinationName' => (string)$xml->FLSResponseFields['FLSDestinationName'],
-            'FLSStartDate' => (string)$xml->FLSResponseFields['FLSStartDate'],
-            'FLSEndDate' => (string)$xml->FLSResponseFields['FLSEndDate'],
-            'FLSResultCount' => (string)$xml->FLSResponseFields['FLSResultCount'],
-            'FLSRoutesFound' => (string)$xml->FLSResponseFields['FLSRoutesFound'],
-            'FLSBranchCount' => (string)$xml->FLSResponseFields['FLSBranchCount'],
-            'FLSTargetCount' => (string)$xml->FLSResponseFields['FLSTargetCount'],
-            'FLSRecordCount' => (string)$xml->FLSResponseFields['FLSRecordCount'],
-        ];
-
-        $flightDetails = [];
-        foreach ($xml->FlightDetails as $details) {
-            $flight = [
-                'TotalFlightTime' => (string)$details['TotalFlightTime'],
-                'TotalMiles' => (string)$details['TotalMiles'],
-                'TotalTripTime' => (string)$details['TotalTripTime'],
-                'FLSDepartureDateTime' => (string)$details['FLSDepartureDateTime'],
-                'FLSDepartureTimeOffset' => (string)$details['FLSDepartureTimeOffset'],
-                'FLSDepartureCode' => (string)$details['FLSDepartureCode'],
-                'FLSDepartureName' => (string)$details['FLSDepartureName'],
-                'FLSArrivalDateTime' => (string)$details['FLSArrivalDateTime'],
-                'FLSArrivalTimeOffset' => (string)$details['FLSArrivalTimeOffset'],
-                'FLSArrivalCode' => (string)$details['FLSArrivalCode'],
-                'FLSArrivalName' => (string)$details['FLSArrivalName'],
-                'FLSFlightType' => (string)$details['FLSFlightType'],
-                'FLSFlightLegs' => (string)$details['FLSFlightLegs'],
-                'FLSFlightDays' => (string)$details['FLSFlightDays'],
-                'FLSDayIndicator' => (string)$details['FLSDayIndicator'],
-                'FLSPrice' => rand(100, 1000),
-                'FLSCurrency' => 'EUR',
-                'FlightLegDetails' => []
-            ];
-
-            foreach ($details->FlightLegDetails as $leg) {
-                $flight['FlightLegDetails'][] = [
-                    'DepartureDateTime' => (string)$leg['DepartureDateTime'],
-                    'FLSDepartureTimeOffset' => (string)$leg['FLSDepartureTimeOffset'],
-                    'ArrivalDateTime' => (string)$leg['ArrivalDateTime'],
-                    'FLSArrivalTimeOffset' => (string)$leg['FLSArrivalTimeOffset'],
-                    'FlightNumber' => (string)$leg['FlightNumber'],
-                    'JourneyDuration' => (string)$leg['JourneyDuration'],
-                    'SequenceNumber' => (string)$leg['SequenceNumber'],
-                    'LegDistance' => (string)$leg['LegDistance'],
-                    'FLSMeals' => (string)$leg['FLSMeals'],
-                    'FLSInflightServices' => (string)$leg['FLSInflightServices'],
-                    'FLSUUID' => (string)$leg['FLSUUID'],
-                    'DepartureAirport' => [
-                        'CodeContext' => (string)$leg->DepartureAirport['CodeContext'],
-                        'LocationCode' => (string)$leg->DepartureAirport['LocationCode'],
-                        'FLSLocationName' => (string)$leg->DepartureAirport['FLSLocationName'],
-                        'Terminal' => (string)$leg->DepartureAirport['Terminal'],
-                        'FLSDayIndicator' => (string)$leg->DepartureAirport['FLSDayIndicator'],
-                    ],
-                    'ArrivalAirport' => [
-                        'CodeContext' => (string)$leg->ArrivalAirport['CodeContext'],
-                        'LocationCode' => (string)$leg->ArrivalAirport['LocationCode'],
-                        'FLSLocationName' => (string)$leg->ArrivalAirport['FLSLocationName'],
-                        'Terminal' => (string)$leg->ArrivalAirport['Terminal'],
-                        'FLSDayIndicator' => (string)$leg->ArrivalAirport['FLSDayIndicator'],
-                    ],
-                    'MarketingAirline' => [
-                        'Code' => (string)$leg->MarketingAirline['Code'],
-                        'CodeContext' => (string)$leg->MarketingAirline['CodeContext'],
-                        'CompanyShortName' => (string)$leg->MarketingAirline['CompanyShortName'],
-                    ],
-                    'Equipment' => [
-                        'AirEquipType' => (string)$leg->Equipment['AirEquipType'],
-                    ],
-                ];
-            }
-
-            $flightDetails[] = $flight;
-        }
-
-        // Create the final JSON structure
-        //
-        /* */
-        $flights = [
-            'FLSResponseFields' => $flsResponseFields,
-            'FlightDetails' => $flightDetails,
-        ];
-
-        //dd($jsonData);
-
-        $json = json_encode($flights);
-        //dd($flights);
-        return view('flights.search', compact('flights'));
-        //return response()->json($jsonData);
-
-
-// Close cURL session
-        curl_close($curl);
-
-        return view('flights.search', compact('flights'));
-    }
-
-    public function s3function_remove(Request $request)
-    {
-
-        //
-        //$file = $request->file('file')->store('public/
-        //$car = Storage::disk('s3')->put('AAAAAAAAAAexample.txt', 'Contents');
-
-
-        $files = Storage::disk('s3')->files('s3storage');
-
-
-        return response()->json([
-            'path' => 'yes',
-            'msg' => 'success'
-        ]);
-        //echo "Lambda Function Response: " . $file.  " a\n";
-
-    }
-
-    public function s3filesapilambdas3_remove()
-    {
-
-
-        $fileName = 'mycustom.txt';
-        $fileContent = 'testing file content';
-
-        // Path where the file will be created
-        $filePath = public_path($fileName);
-
-        // Create the file and write content to it
-        file_put_contents($filePath, $fileContent);
-
-        $url = 'https://x3ojbpahgh.execute-api.us-east-1.amazonaws.com/CPPAPIv2/storage';
-
-        $file = $filePath;
-        if ($file) {
-            // Instantiate GuzzleHTTP client
-            $client = new Client();
-
-            // Replace 'YOUR_AWS_API_ENDPOINT' with your actual AWS API Gateway endpoint
-            $awsApiGatewayEndpoint = $url;
-
-            try {
-                // Send a POST request to AWS API Gateway with the file
-                $response = $client->request('POST', $awsApiGatewayEndpoint, [
-                    'multipart' => [
-                        [
-                            'name' => 'file', // Name of the file input in your AWS API
-                            'contents' => fopen($filePath, 'r'), // Open file in read mode
-                            'filename' => $fileName, // Original file name
-                        ],
-                    ],
-                    // Add any additional headers required by your AWS API Gateway
-                    'headers' => [
-
-                        'Content-Type' => 'application/json', // Adjust content type if needed
-                        'Accept' => 'application/json'
-                        // Add any other required headers
-                    ],
-                ]);
-
-                // Get the response body
-                $result = $response->getBody()->getContents();
-
-                // Handle the API response here
-                // ...
-
-                print_r(explode("\n", $result));
-                return response()->json(['message' => 'File uploaded successfully']);
-            } catch (\Exception $e) {
-                // Handle exceptions here
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-        } else {
-            return response()->json(['error' => 'No file uploaded'], 400);
-        }
-
-
-    }
-
-
-    public function sns_remove()
-    {
-
-        $region = env('AWS_DEFAULT_REGION', 'us-east-1');
-        $client = new LambdaClient([
-            'version' => 'latest',
-            'region' => $region
-        ]);
-
-        $result = $client->invoke([
-            'FunctionName' => 'mylambda',
-            'Payload' => json_encode([
-                'region_name' => $region,
-                'name' => 'aja',
-                'subject' => 'Amazon notificacion',
-                'email' => 'metahuagen@gmail.com',
-                'msg' => 'Finally, some sleep'
-            ]),
-        ]);
-
-        dd(json_decode($result['Payload']->getContents(), true)['body']);
-
-    }
-
-    public function upload_remove()
-    {
-        return view('flights.upload');
-    }
-
-
-    public function mylibrary_remove(Request $request)
-    {
-        $var = new HardProcess();
-        $var->getDetails("I want", 5, "Tacos", 3, " people");
-
-    }
-
 
     /** Get all the IATA codes from DATABASE */
     public function iata(Request $request)
@@ -254,14 +29,14 @@ class FlightController extends Controller
         $term = $request->input('q');
         $results = null;
 
-        //Get values from elasticache
+        //Get values from AWS ElastiCache
         try {
             $results = Redis::get($term);
         }catch (\Exception $e) {
             $results = Airport::where('iata', 'LIKE', '%' . $term . '%')
                 ->orWhere('name', 'LIKE', '%' . $term . '%')
                 ->limit(10)->get();
-            $results = ['airports'=>$results,'hit'=>'DATABASE '.$term];
+            $results = ['airports'=>$results,'hit'=>'DATABASE '.$term.' Redis Failed' . $e->getMessage()];
             return response()->json($results);
         }
 
@@ -275,7 +50,12 @@ class FlightController extends Controller
                 ->limit(10)->get();
 
             //Save values from elasticache
-            Redis::set($term, json_encode($results));
+            //In try catch providing Redis connection fails
+            try {
+                Redis::set($term, json_encode($results));
+            }catch(\Exception $e){
+                info("Redis connection failed");
+            }
             $results = ['airports'=>$results,'hit'=>'DATABASE '.$term];
         }
 
@@ -285,26 +65,49 @@ class FlightController extends Controller
     /** Search for Flights in API Timetable */
     public function search_timetable(Request $request)
     {
+        /**
+         * Get all variables from GET Method
+         */
         $origin = $request->input('origin');
         $destination = $request->input('destination');
         $departureDate = date('Ymd', strtotime($request->input('departureDate')));
 
-        // API endpoint and required headers with variables
 
-
-        // Execute the cURL request
+        /**
+         * API Supported : Rapidapi
+         * Create a new instance of ApiCall to call the API we want to use for flights
+         * Sending the key and the host to call the API
+         * Retrieve the key and host from the Environment values for production
+         */
         $apicall = new ApiCall(env('FLIGHT_API_KEY', 'dbfcdd77famsh9459b8b688e207ap14bc90jsn352555900c60'),  env('FLIGHT_API_URL', 'timetable-lookup.p.rapidapi.com'), 'rapidapi' );
+
+        /**
+         * Set the parameters to call the API
+         */
         $apicall->setOrigin($origin);
         $apicall->setDestination($destination);
         $apicall->setDepartureDate($departureDate);
 
 
+        /**
+         * Execute the API from external library.
+         * Get the results as XML
+         */
         $response = $apicall->executeApi();
 
 
+        /**
+         * If needed, create a new HardProcces, to convert XML from a specific API flight
+         * to JSON format.
+         * API supported: rapidapi
+         */
         $myHardProcess = new HardProcess("rapidapi");
         $flights = $myHardProcess->getObject($response);
 
+
+        /**
+         * Return results to the view
+         */
         return view('flights.search', compact('flights'));
     }
 

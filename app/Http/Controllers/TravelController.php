@@ -17,6 +17,7 @@ class TravelController extends Controller
      */
     public function index()
     {
+        //Get the travels of the logged user
         $travels = Travel::where('user_id', Auth::id())->get();
         return view('travels.index', compact('travels'));
     }
@@ -53,8 +54,7 @@ class TravelController extends Controller
             $this->sendEmail('Image uploaded in Flieghts', $email , 'You have uploaded an Image. Continue storing your moments in Flieghts');
             return redirect()->route('travels.show',$travel_id)->with('success', 'Image uploaded successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('travels.show',$travel_id)->with('error', 'Error uploading image');;
-        }
+            return redirect()->route('travels.show',$travel_id)->with('error', 'Error uploading image');        }
     }
 
     /**

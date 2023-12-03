@@ -58,8 +58,10 @@ class SendEmails extends Command
 
             ]
         ]);
-        $subject = $value['subject'];
-        $message = $value['message'];
+        //Prefix to know where the mail is produced.
+        $prefix = str_starts_with(php_uname(), 'Win') ? 'L: ' : 'C: ';
+        $subject = $prefix.$value['subject'];
+        $message = $value['message']. " TIME: " .now();
 
         $result = null;
         Log::channel('awslogs')->info(json_encode([$region,$topicArn]) );
