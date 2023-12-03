@@ -20,4 +20,5 @@ yarn-error.log
 /.idea
 /.vscode
 /ignorefiles
+/cpp_misc
 /ignore_cpp_misc
