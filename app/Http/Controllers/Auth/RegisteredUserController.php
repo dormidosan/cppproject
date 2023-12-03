@@ -48,6 +48,7 @@ class RegisteredUserController extends Controller
         //CPP Subscribe to the topic for new Users
         self::subscribeTopic($request->email);
 
+        //Send Email with Lambda Function
         $this->sendEmail('Registration completed in Flieghts', $request->email , 'Thank you for register in Flieghts');
 
 

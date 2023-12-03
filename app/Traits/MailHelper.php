@@ -25,16 +25,21 @@ trait MailHelper
         ]);
 
 
-        $result = $client->invoke([
-            'FunctionName' => env('AWS_LAMBDA_NAME', 'laravelmail'),
-            'Payload' => json_encode([
-                'mailSubject'=> $subject,
-                'email'=>$email,
-                'mailBody'=>$body
-            ]),
-        ]);
+        try {
+            $result = $client->invoke([
+                'FunctionName' => env('AWS_LAMBDA_NAME', 'laravelmail'),
+                'Payload' => json_encode([
+                    'mailSubject'=> $subject,
+                    'email'=>$email,
+                    'mailBody'=>$body
+                ]),
+            ]);
+            return json_decode($result['Payload']->getContents(),true);
+        }catch (\Exception $e){
 
-        return json_decode($result['Payload']->getContents(),true);
+        }
+        return json_decode("{'fail'}",true);
+
     }
 
 

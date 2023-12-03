@@ -24,82 +24,35 @@ use App\Http\Controllers\ProfileController;
 */
 
 Route::get('/', function () {
-    //return view('welcome');
-    //Prevent Laravel Homepage
     return \redirect('login');
 });
-
-Route::post('/testing', function () {
-    return "FUNCIONANDO";
-});
-
-Route::post('/norole', function () {
-    return "You have no ROLE here!.";
-});
-
-Route::get('serverenv', function() {
-    $env = getenv(); // Retrieves all server environment variables
-    echo "*". php_uname();
-    // Display server environment variables
-    foreach ($env as $key => $value) {
-        echo "$key: $value <br>";
-    }
-});
-
-Route::get('/testing/snsmail', [TestingController::class, 'snsmail'])->name('testing.snsmail');
-Route::get('/testing/subscribesns', [TestingController::class, 'subscribesns'])->name('testing.subscribesns');
-Route::get('/testing/traitstesting', [TestingController::class, 'traitstesting'])->name('testing.traitstesting');
-Route::get('/testing/testredis', [TestingController::class, 'testredis'])->name('testing.testredis');
-
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');
     //Prevent Laravel Homepage
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 require __DIR__ . '/auth.php';
-
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
 });
 
-/*DASHBOARD FOR FLIGHT*/
-
-Route::get('/token', function () {
-    return csrf_token();
-});
 
 
-
+//Routes for CPP Project. Only when logged as User
 Route::middleware(['auth', 'role:user'])->group(function () {
 
+    //Search the airport
     Route::get('/flights/iata', [FlightController::class, 'iata'])->name('flights.iata');
+
+    //Search the flight
     Route::get('/flights/search', [FlightController::class, 'search_timetable'])->name('flights.search');
 
-
-
-    /*TESTING */
-    Route::get('/flights/s3files', [FlightController::class, 's3files'])->name('flights.s3files');
-    //Route::get('/flights/s3function', [FlightController::class, 's3function'])->name('flights.s3function');
-    //Route::get('/flights/upload', [FlightController::class, 'upload'])->name('flights.upload');
-    Route::get('/flights/lambda', [FlightController::class, 'lambda'])->name('flights.lambda');
-    Route::get('/flights/mylibrary', [FlightController::class, 'mylibrary'])->name('flights.mylibrary');
-    /*TESTING */
-
-
-
+    //Resource for flights
     Route::resource('flights', FlightController::class);
 
+    //Resource for travels
     Route::resource('travels', TravelController::class);
-
-
 });
 

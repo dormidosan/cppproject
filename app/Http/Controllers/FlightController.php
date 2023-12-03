@@ -116,19 +116,7 @@ class FlightController extends Controller
      */
     public function index(): View
     {
-
-        $flights = array();//Flight::take(20)->get();
-
-        return view('flights.index', compact('flights'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
-
-        return view('flights.create');
+        return view('flights.index');
     }
 
     /**
@@ -137,13 +125,15 @@ class FlightController extends Controller
     public function store(Request $request) // :requestResponse
     {
 
+        //Get the flight data
         $flightData = $request->input('flight_data');
         $decodedFlightData = json_decode($flightData, true);
 
+        //Create a new Travel object
         $travel = new Travel();
         $email = Auth::user()->email;
 
-
+        //Set parameters for travel
         $travel->user_id = Auth::id();
         $travel->departure_iata = $decodedFlightData['FLSDepartureCode'];
         $travel->arrival_iata = $decodedFlightData['FLSArrivalCode'];
@@ -152,12 +142,14 @@ class FlightController extends Controller
         $travel->price = $decodedFlightData['FLSPrice'];
 
 
+        //Prevent to store if you have a flight for the same origin, destination and date.
         $previous_record = Travel::where('user_id', $travel->user_id)
             ->where('departure_iata', $travel->departure_iata)
             ->where('arrival_iata', $travel->arrival_iata)
             ->whereDate('departure_date', $travel->departure_date)
             ->first();
 
+        //If no results, store the new travel, otherwise return error and without storing the travel
         if (!$previous_record) {
             $travel->save();
             $this->sendEmail('Flight '.$travel->departure_iata.' => '.$travel->arrival_iata. ' booked', $email , 'Thank for booking with Flieghts');
@@ -171,38 +163,4 @@ class FlightController extends Controller
                     date('d/M h:m A', strtotime($travel->departure_date)));
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Flight $flight): view
-    {
-        return view('flights.show', compact('flight'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Flight $flight): view
-    {
-        return view('flights.edit', compact('flight'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Flight $flight): RedirectResponse
-    {
-        return redirect()->route('flights.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Flight $flight): RedirectResponse
-    {
-        return redirect()->route('flights.index');
-    }
-
-
 }

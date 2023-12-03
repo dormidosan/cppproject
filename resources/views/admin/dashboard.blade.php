@@ -610,16 +610,9 @@
                                     </a>
                                 </li>
                                 <li class="dropdown-item py-2">
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-
-                                        <x-dropdown-link :href="route('logout')"
-                                                         onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                            {{ __('Log Out') }}
-                                        </x-dropdown-link>
-                                    </form>
-
+                                    <a href="javascript:;" class="text-body ms-0">
+                                        <i class="me-2 icon-md" data-feather="log-out"></i>
+                                        <span>Log Out</span>
                                     </a>
                                 </li>
                             </ul>
@@ -634,8 +627,7 @@
 
             <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
                 <div>
-                    <h4 class="mb-3 mb-md-0">Site on maintenance</h4>
-                    <h4 class="mb-3 mb-md-0">Welcome to ADMIN Dashboard FOR CPP.</h4>
+                    <h4 class="mb-3 mb-md-0">Welcome to Dashboard</h4>
                 </div>
                 <div class="d-flex align-items-center flex-wrap text-nowrap">
                     <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
@@ -1052,8 +1044,8 @@
 
         <!-- partial:partials/_footer.html -->
         <footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-3 border-top small">
-            <!-- p class="text-muted mb-1 mb-md-0"><a href="#" target="_blank">UI</a>.</p -->
-            <p class="text-muted">WEB 2.0</p>
+            <p class="text-muted mb-1 mb-md-0">Copyright © 2022 <a href="https://www.nobleui.com" target="_blank">NobleUI</a>.</p>
+            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary ms-1 icon-sm" data-feather="heart"></i></p>
         </footer>
         <!-- partial -->
 

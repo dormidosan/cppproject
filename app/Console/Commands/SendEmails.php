@@ -58,6 +58,7 @@ class SendEmails extends Command
 
             ]
         ]);
+
         //Prefix to know where the mail is produced.
         $prefix = str_starts_with(php_uname(), 'Win') ? 'L: ' : 'C: ';
         $subject = $prefix.$value['subject'];
