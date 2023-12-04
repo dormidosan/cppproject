@@ -128,10 +128,9 @@ return [
         ],
 
         'awslogs' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/' . 'aws.log'),
             'level' => 'info',
-            'days' => 7,
         ],
     ],
 

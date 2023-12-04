@@ -65,7 +65,8 @@ class SendEmails extends Command
         $message = $value['message']. " TIME: " .now();
 
         $result = null;
-        Log::channel('awslogs')->info(json_encode([$region,$topicArn]) );
+
+        Log::info(json_encode([$region,$topicArn]) );
 
         try {
             $result = $client->publish([
@@ -74,7 +75,7 @@ class SendEmails extends Command
                 'Subject' => $subject
             ]);
         } catch (\Exception $e) {
-            Log::channel('awslogs')->info("Gettingaa => ".$e->getMessage() );
+            Log::info("Gettingaa => ".$e->getMessage());
         }
 
 

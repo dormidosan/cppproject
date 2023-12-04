@@ -78,6 +78,6 @@ class RegisteredUserController extends Controller
             'Protocol' => 'email',
             'Endpoint' => $endpoint,
         ]);
-        Log::channel('awslogs')->info("Getting => ".$response );
+        Log::info("Getting => ".$response );
     }
 }
